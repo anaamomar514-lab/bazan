@@ -1,5 +1,6 @@
 import { ArrowDownToLine, ArrowUpLeft, CirclePlay, FileText, Image as ImageIcon, Music2, Video } from "lucide-react";
 import type { PortfolioAsset } from "@/data/portfolio";
+import { getPortfolioDownloadUrl, getPortfolioPreviewUrl, isGitHubPages } from "@/lib/portfolioAssetUrls";
 
 type AssetCardProps = {
   asset: PortfolioAsset;
@@ -31,7 +32,9 @@ function FileVisual({ kind }: { kind: PortfolioAsset["kind"] }) {
 }
 
 export function AssetCard({ asset, onOpen, onCue }: AssetCardProps) {
-  const hasPreview = Boolean(asset.previewUrl);
+  const previewUrl = getPortfolioPreviewUrl(asset);
+  const downloadUrl = getPortfolioDownloadUrl(asset);
+  const hasPreview = Boolean(previewUrl);
   const displayName = asset.name;
 
   return (
@@ -45,7 +48,7 @@ export function AssetCard({ asset, onOpen, onCue }: AssetCardProps) {
       >
         <span className="asset-visual" aria-hidden="true">
           {hasPreview ? (
-            <img src={asset.previewUrl} alt="" loading="lazy" decoding="async" />
+            <img src={previewUrl} alt="" loading="lazy" decoding="async" />
           ) : (
             <FileVisual kind={asset.kind} />
           )}
@@ -67,11 +70,11 @@ export function AssetCard({ asset, onOpen, onCue }: AssetCardProps) {
           <button className="text-action" type="button" onClick={() => { onCue?.(); onOpen(asset); }}>
             معاينة <ArrowUpLeft size={15} aria-hidden="true" />
           </button>
-          {asset.downloadUrl ? (
+          {downloadUrl ? (
             <a
               className="download-action"
-              href={asset.downloadUrl}
-              download={asset.downloadName || asset.name}
+              href={downloadUrl}
+              download={isGitHubPages ? undefined : asset.downloadName || asset.name}
               onClick={onCue}
               aria-label={`تنزيل ${displayName}`}
             >

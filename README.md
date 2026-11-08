@@ -1,14 +1,25 @@
 # بيان | بورتفوليو إبداعي
 
-React / Express / tRPC / Drizzle starter, adapted from the Sandbox web-db-user template.
+موقع محفظة أعمال عربي باتجاه RTL، مبني باستخدام React وVite وCSS مخصص. يحتوي المشروع أيضًا على خادم Express/tRPC للاستخدام على المنصات التي تدعم الخلفية.
 
-- `pnpm dev`: development server; honors `PORT` (default 3000).
-- `pnpm build` / `pnpm start`: build and serve `dist/index.js` and `dist/public/`.
-- `pnpm db:migrate`: apply checked-in migrations. `pnpm db:push`: generate and apply new schema changes.
-- `pnpm check` / `pnpm test`: types and application tests.
+## التشغيل المحلي
 
-Start with the Webdev skill's default-template guide. Platform login, storage, payments and service contracts live in its shared references; read the relevant capability before extending its helper.
+- `pnpm install --frozen-lockfile`: تثبيت التبعيات.
+- `pnpm dev`: تشغيل التطبيق مع الخادم على المنفذ `3000` افتراضيًا.
+- `pnpm build` / `pnpm start`: بناء وتشغيل إصدار الخادم.
+- `pnpm build:static`: بناء واجهة الموقع الثابتة في `dist/public`.
+- `pnpm check` / `pnpm test`: فحص الأنواع والاختبارات.
 
-`server/_core/publicConfig.ts` exposes only named public runtime values. Private keys stay server-side. The platform serves managed `/manus-storage/` assets; the application does not register a second proxy.
+## GitHub Pages
 
-Platform configuration is readable and editable through `webdev.config`. Default settings are initial values, not enforced constraints. The agent may modify the files, commands and configuration or follow the flexible guide for another stack.
+يُبنى الموقع الثابت تلقائيًا عند الدفع إلى `main` أو عبر التشغيل اليدوي لسير عمل **Deploy portfolio to GitHub Pages**. يضبط البناء بادئة `/bazan/` حتى تُحمّل ملفات JavaScript وCSS والصور من المسار الصحيح للمستودع. بعد نجاح أول تشغيل، يكون الموقع على:
+
+`https://anaamomar514-lab.github.io/bazan/`
+
+تُخزّن الصور المصغّرة وصورة الواجهة ضمن `client/public/assets` لتعمل دون خدمة تخزين Manus. تفتح معاينة الملفات الأصلية والتنزيلات عبر روابط Google Drive الموجودة في بيانات المعرض؛ أما تشغيل نسخة Express/tRPC فيتطلب استضافة تدعم Node.js وخدمة الخلفية.
+
+## إعدادات الخادم
+
+- `pnpm db:migrate`: تطبيق ملفات الترحيل.
+- `pnpm db:push`: إنشاء المخطط وتطبيقه.
+- يحصر `server/_core/publicConfig.ts` القيم المعروضة للمتصفح في إعدادات عامة مسموح بها؛ تبقى المفاتيح الخاصة على الخادم.

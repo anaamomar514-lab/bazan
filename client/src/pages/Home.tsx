@@ -20,6 +20,7 @@ import { BrandMark } from "@/components/portfolio/BrandMark";
 import { portfolioAssets, portfolioCategories, type PortfolioAsset } from "@/data/portfolio";
 import { profile } from "@/data/profile";
 import { useSoundEffects } from "@/hooks/useSoundEffects";
+import { getPortfolioDownloadUrl, getProfilePortraitUrl, isGitHubPages } from "@/lib/portfolioAssetUrls";
 
 const DECORATIVE_ART_URL = "";
 const INITIAL_ITEMS = 9;
@@ -61,6 +62,8 @@ export default function Home() {
     () => portfolioAssets.find((asset) => asset.categoryId === "cv" && asset.name.toLowerCase().endsWith(".pdf")),
     [],
   );
+  const cvDownloadUrl = cvAsset ? getPortfolioDownloadUrl(cvAsset) ?? (isGitHubPages ? cvAsset.driveUrl : undefined) : undefined;
+  const portraitUrl = getProfilePortraitUrl(profile.portraitUrl);
   const currentItems = useMemo(() => (
     selectedCategory === "all"
       ? portfolioAssets
@@ -178,7 +181,7 @@ export default function Home() {
             <div className="portrait-card">
               <div className="portrait-topline"><span>مبدعة في طور التشكّل</span><span className="portrait-sparkle"><Sparkles size={14} /></span></div>
               <div className="portrait-window">
-                <img src={profile.portraitUrl} alt={`${profile.name} — الصورة الواردة في السيرة الذاتية`} fetchPriority="high" />
+                <img src={portraitUrl} alt={`${profile.name} — الصورة الواردة في السيرة الذاتية`} fetchPriority="high" />
               </div>
               <div className="portrait-caption">
                 <span>{profile.name}</span>
@@ -218,9 +221,15 @@ export default function Home() {
               <p className="about-bio">{profile.bio}</p>
               <blockquote>«{profile.cvTagline}»</blockquote>
               <p className="about-note">أضيف إلى خلفيتي الإعلامية شغفًا بصناعة صور وفيديوهات بالذكاء الاصطناعي التوليدي، وأتعلّم باستمرار كيف تصبح التقنية وسيلةً لعرض الفكرة بوضوح.</p>
-              {cvAsset?.downloadUrl ? (
-                <a className="inline-download" href={cvAsset.downloadUrl} download={cvAsset.downloadName || profile.cvDownloadName}>
-                  تنزيل السيرة الذاتية <ArrowUpLeft size={16} aria-hidden="true" />
+              {cvDownloadUrl ? (
+                <a
+                  className="inline-download"
+                  href={cvDownloadUrl}
+                  download={isGitHubPages ? undefined : cvAsset?.downloadName || profile.cvDownloadName}
+                  target={isGitHubPages ? "_blank" : undefined}
+                  rel={isGitHubPages ? "noreferrer" : undefined}
+                >
+                  {isGitHubPages ? "فتح السيرة الذاتية" : "تنزيل السيرة الذاتية"} <ArrowUpLeft size={16} aria-hidden="true" />
                 </a>
               ) : (
                 <a className="inline-download" href="#work" onClick={() => chooseCategory("cv")}>
